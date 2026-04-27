@@ -1,0 +1,14 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+.idea
+
+# Environments
+.venv/
+venv/
+ENV/
+env/
+
+.env
+fakestore.db
