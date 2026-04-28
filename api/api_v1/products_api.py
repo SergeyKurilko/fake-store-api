@@ -1,5 +1,3 @@
-import os
-
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -8,8 +6,8 @@ from database.config import get_db
 from database.models import FakeProduct
 from schemas import FakeProductSchema
 from services import products_services as ps
+from settings import BEARER_TOKEN
 
-BEARER_TOKEN = os.getenv("BEARER_TOKEN")
 
 security = HTTPBearer()
 
