@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 
 from database.models import Base
 from database.config import engine, AsyncSessionLocal
-from database.mock_data import create_fake_products, check_products_exists
+from database.seeds.mock_data import create_fake_products, check_products_exists
 from api import products_router
 
 

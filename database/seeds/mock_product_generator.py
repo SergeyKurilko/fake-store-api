@@ -1,20 +1,21 @@
+import json
 import random
 
 # Категории продуктов
 CATEGORIES = [
-    "electronics",
-    "jewelery",
-    "men's clothing",
-    "women's clothing",
-    "sports",
-    "books",
-    "toys",
-    "home",
+    1, # "electronics"
+    2, # "jewelery"
+    3, # "men's clothing"
+    4, # "women's clothing"
+    5, # "sports"
+    6, # "books"
+    7, # "toys"
+    8, # "home"
 ]
 
 # Префиксы для названий
 TITLE_PREFIXES = {
-    "electronics": [
+    1: [
         "Смартфон",
         "Ноутбук",
         "Планшет",
@@ -26,7 +27,7 @@ TITLE_PREFIXES = {
         "Зарядное устройство",
         "Внешний диск",
     ],
-    "jewelery": [
+    2: [
         "Кольцо",
         "Серьги",
         "Цепочка",
@@ -36,7 +37,7 @@ TITLE_PREFIXES = {
         "Запонки",
         "Брошь",
     ],
-    "men's clothing": [
+    3: [
         "Куртка",
         "Джинсы",
         "Футболка",
@@ -48,7 +49,7 @@ TITLE_PREFIXES = {
         "Кепка",
         "Ремень",
     ],
-    "women's clothing": [
+    4: [
         "Платье",
         "Юбка",
         "Блузка",
@@ -60,7 +61,7 @@ TITLE_PREFIXES = {
         "Шарф",
         "Сумка",
     ],
-    "sports": [
+    5: [
         "Беговые кроссовки",
         "Футбольный мяч",
         "Тренажер",
@@ -72,7 +73,7 @@ TITLE_PREFIXES = {
         "Плавательные очки",
         "Спортивный костюм",
     ],
-    "books": [
+    6: [
         "Роман",
         "Детектив",
         "Фантастика",
@@ -84,7 +85,7 @@ TITLE_PREFIXES = {
         "Комикс",
         "Журнал",
     ],
-    "toys": [
+    7: [
         "Конструктор",
         "Кукла",
         "Машинка",
@@ -96,7 +97,7 @@ TITLE_PREFIXES = {
         "Мозаика",
         "Дрон",
     ],
-    "home": [
+    8: [
         "Диван",
         "Стул",
         "Стол",
@@ -130,22 +131,24 @@ def generate_mock_products(count: int = 100) -> list:
 
         # Генерируем описание в зависимости от категории
         descriptions = {
-            "electronics": "Современное устройство с передовыми технологиями. Высокое качество и надежность.",
-            "jewelery": "Изящное украшение из высококачественных материалов. Отличный подарок.",
-            "men's clothing": "Качественная одежда для настоящих мужчин. Стиль и комфорт.",
-            "women's clothing": "Элегантная женская одежда из натуральных тканей. Подчеркнет ваш стиль.",
-            "sports": "Профессиональное спортивное снаряжение. Поможет достичь новых высот.",
-            "books": "Увлекательная книга, которая не оставит вас равнодушным.",
-            "toys": "Безопасная и интересная игрушка для детей любого возраста.",
-            "home": "Качественная мебель для вашего дома. Создайте уютную атмосферу.",
+            1: "Современное устройство с передовыми технологиями. Высокое качество и надежность.",
+            2: "Изящное украшение из высококачественных материалов. Отличный подарок.",
+            3: "Качественная одежда для настоящих мужчин. Стиль и комфорт.",
+            4: "Элегантная женская одежда из натуральных тканей. Подчеркнет ваш стиль.",
+            5: "Профессиональное спортивное снаряжение. Поможет достичь новых высот.",
+            6: "Увлекательная книга, которая не оставит вас равнодушным.",
+            7: "Безопасная и интересная игрушка для детей любого возраста.",
+            8: "Качественная мебель для вашего дома. Создайте уютную атмосферу.",
         }
 
+        product_article = f"{random.randint(10000, 99999)}-{category}"
+
         description = (
-            descriptions[category] + f" Артикул: {random.randint(10000, 99999)}"
+            descriptions[category] + f" Артикул: {product_article}"
         )
 
         # Генерируем URL изображения
-        image = f"https://myfakestoreapi.com/img/{random.randint(1, 500)}.jpg"
+        image = f"https://myfakestoreapi.ru/img/{product_article}.jpg"
 
         # Генерируем рейтинг
         rate = round(random.uniform(1.0, 5.0), 1)
@@ -155,7 +158,7 @@ def generate_mock_products(count: int = 100) -> list:
             "title": title,
             "price": price,
             "description": description,
-            "category": category,
+            "category_id": category,
             "image": image,
             "rating": {"rate": rate, "count": rating_count},
         }
@@ -168,22 +171,6 @@ def generate_mock_products(count: int = 100) -> list:
 # Использование:
 mock_products = generate_mock_products(5000)
 
-# Пример для проверки первых 3 продуктов:
-# print(mock_products[:3])
-a = 15
-for mock_product in mock_products:
-    print(f"\t{mock_product},")
-
-# # Функция для создания продуктов в БД
-# def create_fake_products(session):
-#     """Создает продукты в базе данных"""
-#     from database.models import FakeProduct
-#
-#     mock_products = generate_mock_products(100)
-#
-#     for mock_product in mock_products:
-#         new_product = FakeProduct(**mock_product)
-#         session.add(new_product)
-#
-#     session.commit()
-#     return len(mock_products)
+json_str = json.dumps(mock_products, indent=4)
+with open("./mock_products.json", "w") as f:
+    f.write(json_str)

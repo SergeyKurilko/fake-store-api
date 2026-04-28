@@ -3,8 +3,8 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.config import get_db
-from database.models import FakeProduct
-from schemas import FakeProductSchema
+from database.models import Product
+from schemas import ProductSchema
 from services import products_services as ps
 from settings import BEARER_TOKEN
 
@@ -25,7 +25,7 @@ router = APIRouter(dependencies=[Depends(verify_token)])
 
 @router.get("/products/{product_id}")
 async def get_product_by_id(product_id: int, session: AsyncSession = Depends(get_db)):
-    product: FakeProduct | None = await ps.get_product_by_id(session, product_id)
+    product: Product | None = await ps.get_product_by_id(session, product_id)
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
-    return FakeProductSchema.model_validate(product)
+    return ProductSchema.model_validate(product)
