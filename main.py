@@ -1,27 +1,12 @@
-import os
-
-from fastapi import FastAPI, Depends, HTTPException, status
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from fastapi import FastAPI
 from contextlib import asynccontextmanager
+
+from fastapi.responses import HTMLResponse
 
 from database.models import Base
 from database.config import engine, AsyncSessionLocal
 from database.mock_data import create_fake_products, check_products_exists
 from api import products_router
-
-BEARER_TOKEN = os.getenv("BEARER_TOKEN")
-
-security = HTTPBearer()
-
-
-async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
-    """Асинхронная проверка токена"""
-    token = credentials.credentials
-    if token != BEARER_TOKEN:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail="Invalid token"
-        )
-    return token
 
 
 @asynccontextmanager
@@ -43,8 +28,13 @@ async def lifespan(app: FastAPI):
 
 
 # Создаем приложение с lifespan
-app = FastAPI(dependencies=[Depends(verify_token)], lifespan=lifespan)
+app = FastAPI(lifespan=lifespan)
 app.include_router(products_router)
+
+@app.get("/", response_class=HTMLResponse)
+async def serve_frontend():
+    with open("templates/index.html", "r", encoding="utf-8") as f:
+        return HTMLResponse(content=f.read())
 
 if __name__ == "__main__":
     import dotenv
