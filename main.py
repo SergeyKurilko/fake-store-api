@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from database.models import Base
 from database.config import engine, AsyncSessionLocal
@@ -30,14 +31,21 @@ async def lifespan(app: FastAPI):
 # Создаем приложение с lifespan
 app = FastAPI(lifespan=lifespan)
 app.include_router(products_router)
+# app.mount("/img", StaticFiles(directory="static"), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 async def serve_frontend():
     with open("templates/index.html", "r", encoding="utf-8") as f:
         return HTMLResponse(content=f.read())
 
+@app.get("/img/{product_id}")
+async def serve_static():
+    return FileResponse(
+        path="static/img/def_img.png",
+        media_type="image/png",
+        headers={"Content-Disposition": "inline"}  # Открыть в браузере
+    )
+
 if __name__ == "__main__":
-    import dotenv
     import uvicorn
-    dotenv.load_dotenv()
     uvicorn.run("main:app", host="127.0.0.1", port=8000)
