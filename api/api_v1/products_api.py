@@ -27,7 +27,10 @@ router = APIRouter(dependencies=[Depends(verify_token)], tags=["products"])
 
 
 @router.get("/products/{product_id}")
-async def get_product_by_id(product_id: int, session: AsyncSession = Depends(get_db)):
+async def get_product_by_id(
+        product_id: int,
+        session: AsyncSession = Depends(get_db)
+) -> ProductSchema:
     """Получение одного продукта по id продукта"""
     product: Product | None = await ps.get_product_by_id(session, product_id)
     if not product:
