@@ -49,6 +49,6 @@ async def get_products_by_category(
     if not items:
         raise HTTPException(status_code=404, detail="Products not found")
     return ProductListByCategory(
-        items=items[:-1],
+        items=items[:-1] if len(items) > 1 else items,
         has_more=bool(len(items) > (request.limit)), # нашлось продуктов больше, чем запрашивали в limit
     )
