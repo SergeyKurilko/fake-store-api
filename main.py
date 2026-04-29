@@ -33,12 +33,12 @@ app = FastAPI(lifespan=lifespan)
 app.include_router(products_router)
 # app.mount("/img", StaticFiles(directory="static"), name="static")
 
-@app.get("/", response_class=HTMLResponse)
+@app.get("/", response_class=HTMLResponse, include_in_schema=False)
 async def serve_frontend():
     with open("templates/index.html", "r", encoding="utf-8") as f:
         return HTMLResponse(content=f.read())
 
-@app.get("/img/{product_id}")
+@app.get("/img/{product_id}", include_in_schema=False)
 async def serve_static():
     return FileResponse(
         path="static/img/def_img.png",
