@@ -31,7 +31,7 @@ async def lifespan(app: FastAPI):
 # Создаем приложение с lifespan
 app = FastAPI(lifespan=lifespan)
 app.include_router(products_router)
-# app.mount("/img", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)
 async def serve_frontend():
@@ -45,6 +45,11 @@ async def serve_static():
         media_type="image/png",
         headers={"Content-Disposition": "inline"}  # Открыть в браузере
     )
+
+@app.get("/random-product-card", response_class=HTMLResponse, include_in_schema=False)
+async def random_product_card_html():
+    with open("templates/products_cards/random_product_card.html", "r", encoding="utf-8") as f:
+        return HTMLResponse(content=f.read())
 
 if __name__ == "__main__":
     import uvicorn
