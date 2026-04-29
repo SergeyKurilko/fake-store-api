@@ -1,3 +1,5 @@
+import glob
+
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
@@ -38,13 +40,25 @@ async def serve_frontend():
     with open("templates/index.html", "r", encoding="utf-8") as f:
         return HTMLResponse(content=f.read())
 
-@app.get("/img/{product_id}", include_in_schema=False)
-async def serve_static():
-    return FileResponse(
-        path="static/img/def_img.png",
-        media_type="image/png",
-        headers={"Content-Disposition": "inline"}  # Открыть в браузере
-    )
+@app.get("/img/{product_article}", include_in_schema=False)
+async def serve_static(product_article: str):
+    file_path = "static/img/def_img.png"
+    try:
+        split_article = product_article.split("-")
+        category = split_article[-1]
+        category = category.split(".")[0]
+
+        # Ищем файл, начинающийся с category-
+        pattern = f"static/img/{category}-*"
+        matching_files = glob.glob(pattern)
+        if matching_files:
+            file_path = matching_files[0]
+    finally:
+        return FileResponse(
+            path=file_path,
+            media_type="image/png",
+            headers={"Content-Disposition": "inline"}  # Открыть в браузере
+        )
 
 @app.get("/random-product-card", response_class=HTMLResponse, include_in_schema=False)
 async def random_product_card_html():
