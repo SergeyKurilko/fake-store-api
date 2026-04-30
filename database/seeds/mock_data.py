@@ -7,14 +7,14 @@ from settings import BASE_DIR
 from database.models import Product, ProductCategory
 
 mock_categories = [
-    {"id": 1, "title": "electronics"},
-    {"id": 2, "title": "jewelery"},
-    {"id": 3, "title": "men's clothing"},
-    {"id": 4, "title": "women's clothing"},
-    {"id": 5, "title": "sports"},
-    {"id": 6, "title": "books"},
-    {"id": 7, "title": "toys"},
-    {"id": 8, "title": "home"},
+    {"id": 1, "title": "Электроника"},
+    {"id": 2, "title": "Украшения"},
+    {"id": 3, "title": "Мужская одежда"},
+    {"id": 4, "title": "Женская одежда"},
+    {"id": 5, "title": "Спорт"},
+    {"id": 6, "title": "Книги"},
+    {"id": 7, "title": "Игры"},
+    {"id": 8, "title": "Для дома"},
 ]
 
 
