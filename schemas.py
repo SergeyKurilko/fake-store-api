@@ -20,6 +20,7 @@ class ProductSchema(BaseModel):
     price: int
     description: str
     category_id: int
+    category_name: str
     image: str
     rating: RatingSchema
 
