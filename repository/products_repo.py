@@ -1,13 +1,28 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from database.models import Product, ProductCategory
+from schemas import ProductSchema
 
 
-async def get_product_by_id(session: AsyncSession, product_id: int) -> Product | None:
-    """Асинхронное получение продукта по ID"""
-    stmt = select(Product).where(Product.id == product_id)
+async def get_product_by_id(session: AsyncSession, product_id: int) -> ProductSchema | None:
+    """Получение продукта по ID"""
+    stmt = (
+        select(
+            Product.id,
+            Product.title,
+            Product.price,
+            Product.description,
+            Product.category_id,
+            Product.image,
+            Product.rating,
+            ProductCategory.title.label("category_name"),
+        )
+        .join(ProductCategory, Product.category_id == ProductCategory.id)
+        .where(Product.id == product_id)
+    )
     result = await session.execute(stmt)
-    return result.scalar_one_or_none()
+    row = result.mappings().first()
+    return ProductSchema(**row) if row else None
 
 
 async def get_products_by_category_and_page(
